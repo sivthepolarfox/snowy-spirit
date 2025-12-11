@@ -1,8 +1,8 @@
 {
     "schemaVersion": 1,
-    "id": "examplemod",
+    "id": "tooltipscreenshots",
     "version": "${version}",
-    "name": "examplemod",
+    "name": "TooltipScreenshots",
     "description": "",
     "authors": [ ],
     "contact": { },
@@ -12,15 +12,15 @@
         "client": [
             {
                 "adapter": "kotlin",
-                "value": "com.example.template.ExampleMod"
+                "value": "me.siv.tooltipscreenshot.TooltipScreenshot"
             }
         ],
         "modmenu": [
-            "com.example.template.ModMenuCompat"
+            "me.siv.tooltipscreenshot.ModMenuCompat"
         ]
     },
     "mixins": [
-        "template.mixins.json"
+        "tooltipscreenshot.mixins.json"
     ],
     "depends": {
         "fabricloader": ">=${loader_version}",

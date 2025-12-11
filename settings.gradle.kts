@@ -1,8 +1,9 @@
 
-rootProject.name = "Example Mod"
+rootProject.name = "TooltipScreenshot"
 
 pluginManagement {
     repositories {
+        mavenCentral()
         maven("https://maven.fabricmc.net/")
         gradlePluginPortal()
     }

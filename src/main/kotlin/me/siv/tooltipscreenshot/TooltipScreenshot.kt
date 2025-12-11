@@ -1,19 +1,21 @@
-package com.example.template
+package me.siv.tooltipscreenshot
 
 import com.mojang.brigadier.CommandDispatcher
 import com.teamresourceful.resourcefulconfig.api.loader.Configurator
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.commands.CommandBuildContext
 
-object ExampleMod : ClientModInitializer {
+object TooltipScreenshot : ClientModInitializer {
 
-    val configurator = Configurator("examplemod")
+    val configurator = Configurator("tooltipscreenshot")
+    var config: ResourcefulConfig? = null
 
     override fun onInitializeClient() {
-        configurator.register(ExampleConfig::class.java)
+        config = Config.register(configurator)
         ClientCommandRegistrationCallback.EVENT.register(::onRegisterCommands)
     }
 
@@ -22,7 +24,7 @@ object ExampleMod : ClientModInitializer {
         buildContext: CommandBuildContext
     ) {
         dispatcher.register(
-            ClientCommandManager.literal("yourcommand").executes { context ->
+            ClientCommandManager.literal("meow").executes { context ->
                 println("Hello, world!")
                 1
             })

@@ -1,4 +1,4 @@
-package com.example.template.mixins;
+package me.siv.tooltipscreenshot.mixins;
 
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;

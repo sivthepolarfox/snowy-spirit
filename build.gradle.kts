@@ -2,17 +2,19 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     java
-    kotlin("jvm") version "2.0.0"
+    idea
+    kotlin("jvm") version "2.2.21"
     alias(libs.plugins.loom)
 }
 
 repositories {
     maven("https://maven.teamresourceful.com/repository/maven-public/")
     maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
+    maven("https://maven.terraformersmc.com/releases/")
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:1.21")
+    minecraft(libs.minecraft)
     mappings(loom.officialMojangMappings())
 
     modImplementation(libs.fabricLoader)
@@ -24,6 +26,8 @@ dependencies {
     modImplementation(libs.resourcefulconfig)
     modImplementation(libs.resourcefulconfigkt)
     include(libs.resourcefulconfigkt)
+
+    modImplementation(libs.modmenu)
 }
 
 loom {
@@ -37,9 +41,15 @@ loom {
 tasks {
     processResources {
         inputs.property("version", project.version)
+        inputs.property("minecraft_version", libs.versions.minecraft.get())
+        inputs.property("loader_version", libs.versions.fabricLoader.get())
+
         filesMatching("fabric.mod.json") {
-            expand(getProperties())
-            expand(mutableMapOf("version" to project.version))
+            expand(
+                "version" to project.version,
+                "loader_version" to libs.versions.fabricLoader.get(),
+                "minecraft_version" to libs.versions.minecraft.get(),
+            )
         }
     }
 
