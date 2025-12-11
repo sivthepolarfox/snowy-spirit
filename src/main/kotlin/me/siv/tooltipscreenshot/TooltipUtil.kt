@@ -69,7 +69,7 @@ object TooltipUtil {
         val encoder: CommandEncoder = device.createCommandEncoder()
         var renderTarget: RenderTarget
         try {
-            renderTarget = TextureTarget(null, fullWidth, height, false)
+            renderTarget = TextureTarget(null, fullWidth + 24, height + 24, false)
         } catch (e: Exception) {
             println("Couldnt initialize render target")
             e.printStackTrace()
@@ -85,22 +85,22 @@ object TooltipUtil {
 
         encoder.clearColorTexture(renderTarget.colorTexture, 0)
         context.pose().scale(
-            TooltipScreenshot.mc.window.guiScaledWidth / fullWidth.toFloat(),
-            TooltipScreenshot.mc.window.guiScaledHeight / height.toFloat(),
+            TooltipScreenshot.mc.window.guiScaledWidth / (fullWidth + 24).toFloat(),
+            TooltipScreenshot.mc.window.guiScaledHeight / (height + 24).toFloat(),
         )
 
-        TooltipRenderUtil.renderTooltipBackground(context, 0, 0, fullWidth, height, rl)
+        TooltipRenderUtil.renderTooltipBackground(context, 0 + 12, 0 + 12, fullWidth, height, rl)
         var yOffset = 0
 
         list.forEach { component ->
-            component.renderText(context, font, 0, yOffset)
+            component.renderText(context, font, 0 + 12, yOffset + 12)
             yOffset += component.getHeight(font) + (if (component == list.first()) 2 else 0)
         }
 
         yOffset = 0
 
         list.forEach { component ->
-            component.renderImage(font, 0, yOffset, fullWidth, height, context)
+            component.renderImage(font, 0 + 12, yOffset + 12, fullWidth, height, context)
             yOffset += component.getHeight(font) + (if (component == list.first()) 2 else 0)
         }
         (renderer as GuiRendererInterface).`tooltipScreenshot$render`(TooltipScreenshot.mc.gameRenderer.fogRenderer.getBuffer(FogRenderer.FogMode.NONE), renderTarget)

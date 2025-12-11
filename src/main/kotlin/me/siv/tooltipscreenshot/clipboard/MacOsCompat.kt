@@ -6,7 +6,7 @@ import com.mojang.blaze3d.platform.MacosUtil
 
 object MacOsCompat {
     /**
-     * Adapted from https://github.com/DeDiamondPro/ChatShot/blob/1b72e99b646cc4c995ea40281cfbf369d3fb1616/src/main/java/dev/dediamondpro/chatshot/util/clipboard/MacOSCompat.java
+     * Taken from https://github.com/DeDiamondPro/ChatShot/blob/1b72e99b646cc4c995ea40281cfbf369d3fb1616/src/main/java/dev/dediamondpro/chatshot/util/clipboard/MacOSCompat.java
      */
     fun doCopyMacOS(path: String?): Boolean {
         if (!MacosUtil.IS_MACOS) {
