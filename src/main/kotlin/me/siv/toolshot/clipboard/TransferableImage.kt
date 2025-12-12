@@ -5,6 +5,9 @@ import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.awt.datatransfer.UnsupportedFlavorException
 
+/**
+ * Utility class taken from https://github.com/DeDiamondPro/ChatShot/blob/master/src/main/java/dev/dediamondpro/chatshot/util/clipboard/TransferableImage.java
+ */
 class TransferableImage(private val image: Image): Transferable {
     @Throws(UnsupportedFlavorException::class)
     override fun getTransferData(flavor: DataFlavor): Any {

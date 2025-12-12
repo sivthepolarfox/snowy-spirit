@@ -4,6 +4,9 @@ import com.mojang.blaze3d.platform.MacosUtil
 import java.awt.Toolkit
 import java.awt.image.BufferedImage
 
+/**
+ * Utility class taken from https://github.com/DeDiamondPro/ChatShot/blob/master/src/main/java/dev/dediamondpro/chatshot/util/clipboard/ClipboardUtil.java
+ */
 object ClipboardUtil {
     fun copy(image: BufferedImage): Boolean {
         return copy(TransferableImage(image))

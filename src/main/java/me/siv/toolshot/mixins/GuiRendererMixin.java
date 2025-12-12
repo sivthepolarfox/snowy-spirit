@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+/**
+ * Adapted from https://github.com/DeDiamondPro/ChatShot/blob/master/src/main/java/dev/dediamondpro/chatshot/mixins/GuiRendererMixin.java
+ */
 @Mixin(GuiRenderer.class)
 public class GuiRendererMixin implements GuiRendererInterface {
     @Final
