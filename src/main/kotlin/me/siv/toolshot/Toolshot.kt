@@ -3,14 +3,12 @@ package me.siv.toolshot
 import com.teamresourceful.resourcefulconfig.api.loader.Configurator
 import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig
 import me.siv.toolshot.config.Config
-import me.siv.toolshot.mixins.KeyMappingAccessor
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.screens.ChatScreen
 import net.minecraft.resources.ResourceLocation
 import org.lwjgl.glfw.GLFW
 import org.slf4j.Logger
@@ -37,15 +35,14 @@ object Toolshot : ClientModInitializer, Logger by LoggerFactory.getLogger(MODID)
 
     override fun onInitializeClient() {
         config = Config.register(configurator)
-        ScreenEvents.BEFORE_INIT.register { client, screen, _, _ ->
-            ScreenKeyboardEvents.afterKeyPress(screen).register { _, event ->
-                // TODO: Make chat available again but only copy when a tooltip is visible
-                if (screen is ChatScreen) return@register
-                if (event.key == (COPY as KeyMappingAccessor).key.value) {
-                    if (TooltipUtil.canRender) {
-                        TooltipUtil.copyTooltipToClipboard(TooltipUtil.currentFont!!, TooltipUtil.currentTooltipLines!!, TooltipUtil.currentResourceLocation)
-                    }
+        ScreenEvents.BEFORE_INIT.register { _, screen, _, _ ->
+            ScreenKeyboardEvents.allowKeyPress(screen).register { _, event ->
+                if (COPY.matches(event)) {
+                    val state = TooltipUtil.lastState ?: return@register true
+                    TooltipUtil.copyTooltipToClipboard(state)
+                    return@register false
                 }
+                return@register true
             }
         }
     }

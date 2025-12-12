@@ -16,31 +16,24 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectSortedMaps
 import me.siv.toolshot.clipboard.ClipboardUtil
 import me.siv.toolshot.clipboard.MacOsCompat
 import me.siv.toolshot.config.Config
-import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.render.GuiRenderer
 import net.minecraft.client.gui.render.state.GuiRenderState
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil
 import net.minecraft.client.renderer.*
 import net.minecraft.client.renderer.fog.FogRenderer
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.nio.channels.Channels
-import java.util.Date
+import java.util.*
 import java.util.function.Function
 import javax.imageio.ImageIO
 import kotlin.math.max
 
 object TooltipUtil {
-    var currentFont: Font? = null
-    var currentTooltipLines: List<ClientTooltipComponent>? = null
-    var currentResourceLocation: ResourceLocation? = null
-
-    val canRender get() = currentFont != null && currentTooltipLines != null
+    var lastState: TooltipRenderState? = null
 
     val TOOLTIP_LAYER: Function<RenderTarget, RenderType> = Function { rt ->
         RenderType.create(
@@ -55,7 +48,8 @@ object TooltipUtil {
         )
     }
 
-    fun copyTooltipToClipboard(font: Font, list: List<ClientTooltipComponent>, rl: ResourceLocation?) {
+    fun copyTooltipToClipboard(tooltipRenderState: TooltipRenderState) {
+        val (list, rl, font) = tooltipRenderState
         var fullWidth = 0
         var height = if (list.size == 1) -2 else 0
 
@@ -77,17 +71,30 @@ object TooltipUtil {
             return
         }
 
-        val consoomer = OverrideVertexProvider(ByteBufferBuilder(256), renderTarget)
+        val minecraft = Toolshot.mc
+        val globalUniform = GlobalSettingsUniform()
+
+        minecraft.gameRenderer
+
+        globalUniform.update(
+            minecraft.window.width,
+            minecraft.window.height,
+            minecraft.options.glintStrength().get(),
+            minecraft.level?.gameTime ?: 0L,
+            minecraft.deltaTracker,
+            minecraft.options.menuBackgroundBlurriness,
+        )
+        val consumer = OverrideVertexProvider(ByteBufferBuilder(256), renderTarget)
 
         val renderState = GuiRenderState()
-        val context = GuiGraphics(Toolshot.mc, renderState)
+        val context = GuiGraphics(minecraft, renderState)
 
-        val renderer = GuiRenderer(renderState, consoomer, SubmitNodeStorage(), Toolshot.mc.gameRenderer.featureRenderDispatcher, emptyList())
+        val renderer = GuiRenderer(renderState, consumer, SubmitNodeStorage(), minecraft.gameRenderer.featureRenderDispatcher, emptyList())
 
         encoder.clearColorTexture(renderTarget.colorTexture, 0)
         context.pose().scale(
-            Toolshot.mc.window.guiScaledWidth / (fullWidth + 24).toFloat(),
-            Toolshot.mc.window.guiScaledHeight / (height + 24).toFloat(),
+            minecraft.window.guiScaledWidth / (fullWidth + 24).toFloat(),
+            minecraft.window.guiScaledHeight / (height + 24).toFloat(),
         )
 
         TooltipRenderUtil.renderTooltipBackground(context, 0 + 12, 0 + 12, fullWidth, height, rl)
@@ -104,11 +111,13 @@ object TooltipUtil {
             component.renderImage(font, 0 + 12, yOffset + 12, fullWidth, height, context)
             yOffset += component.getHeight(font) + (if (component == list.first()) 2 else 0)
         }
-        (renderer as GuiRendererInterface).`toolShot$render`(Toolshot.mc.gameRenderer.fogRenderer.getBuffer(FogRenderer.FogMode.NONE), renderTarget)
+        context.renderDeferredElements()
+        (renderer as GuiRendererInterface).`toolShot$render`(minecraft.gameRenderer.fogRenderer.getBuffer(FogRenderer.FogMode.NONE), renderTarget)
 
-        consoomer.finishDrawing()
+        consumer.finishDrawing()
         saveImageToClipboard(renderTarget, MacosUtil.IS_MACOS, Config.saveFile)
 
+        globalUniform.close()
         renderer.close()
     }
 

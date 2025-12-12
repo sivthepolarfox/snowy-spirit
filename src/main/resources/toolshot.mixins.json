@@ -8,8 +8,8 @@
   "client": [
     "GuiGraphicsMixin",
     "GuiRendererMixin",
-    "KeyMappingAccessor",
-    "MainMixin"
+    "MainMixin",
+    "GameRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
