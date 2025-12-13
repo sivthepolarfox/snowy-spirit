@@ -37,13 +37,13 @@ object TooltipUtil {
 
     val TOOLTIP_LAYER: Function<RenderTarget, RenderType> = Function { rt ->
         RenderType.create(
-            "tooltip_screenshot_text",
+            "tooltip_screenshot",
             786432,
             false,
             false,
             RenderPipelines.TEXT,
             RenderType.CompositeState.builder().setTextureState(RenderStateShard.NO_TEXTURE)
-                .setOutputState(RenderStateShard.OutputStateShard("tooltip_screenshot_text") { rt })
+                .setOutputState(RenderStateShard.OutputStateShard("tooltip_screenshot") { rt })
                 .setLightmapState(RenderStateShard.LIGHTMAP).createCompositeState(false)
         )
     }
