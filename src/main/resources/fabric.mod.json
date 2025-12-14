@@ -23,7 +23,7 @@
         ]
     },
     "mixins": [
-        "toolshot.mixins.json"
+        "snowyspirit.mixins.json"
     ],
     "depends": {
         "fabricloader": ">=${loader_version}",
