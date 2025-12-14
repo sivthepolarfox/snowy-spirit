@@ -12,11 +12,11 @@ object Config : ConfigKt("snowyspirit/config") {
         }
     }
 
-    var alwaysSnowing by boolean(false) {
+    var alwaysSnowing by boolean(true) {
         this.translation = "config.snowyspirit.fun.alwaysSnow"
     }
 
-    var noSnowBlocking by boolean(false) {
+    var noSnowBlocking by boolean(true) {
         this.translation = "config.snowyspirit.fun.noSnowBlocking"
     }
 
