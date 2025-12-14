@@ -1,9 +1,9 @@
-package me.siv.toolshot.config
+package me.siv.snowyspirit.config
 
 import com.teamresourceful.resourcefulconfig.api.client.ResourcefulConfigScreen
 import com.terraformersmc.modmenu.api.ConfigScreenFactory
 import com.terraformersmc.modmenu.api.ModMenuApi
-import me.siv.toolshot.Toolshot
+import me.siv.snowyspirit.SnowySpirit
 import net.minecraft.client.gui.screens.Screen
 
 class ModMenuCompat : ModMenuApi {
@@ -11,7 +11,7 @@ class ModMenuCompat : ModMenuApi {
     override fun getModConfigScreenFactory(): ConfigScreenFactory<*> {
         return ConfigScreenFactory<Screen> { parent: Screen? ->
             try {
-                ResourcefulConfigScreen.make(Toolshot.config).build()
+                ResourcefulConfigScreen.make(SnowySpirit.config).build()
             } catch (e: Exception) {
                 println("Cannot open config before it is initialized")
                 e.printStackTrace()

@@ -1,9 +1,9 @@
 {
     "schemaVersion": 1,
-    "id": "toolshot",
+    "id": "snowyspirit",
     "version": "${version}",
-    "name": "Toolshot",
-    "description": "Screenshot Tooltips just like they look in game!",
+    "name": "Snowy Spirit :3",
+    "description": "Snow!!!",
     "authors": [
         "Siv"
     ],
@@ -15,11 +15,11 @@
         "client": [
             {
                 "adapter": "kotlin",
-                "value": "me.siv.toolshot.Toolshot"
+                "value": "me.siv.snowyspirit.SnowySpirit"
             }
         ],
         "modmenu": [
-            "me.siv.toolshot.config.ModMenuCompat"
+            "me.siv.snowyspirit.config.ModMenuCompat"
         ]
     },
     "mixins": [
@@ -29,6 +29,5 @@
         "fabricloader": ">=${loader_version}",
         "fabric": "*",
         "minecraft": "${minecraft_version}"
-    },
-    "accessWidener": "toolshot.accesswidener"
+    }
 }
