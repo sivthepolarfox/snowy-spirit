@@ -1,0 +1,48 @@
+package me.siv.snowyspirit.mixins;
+
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import me.siv.snowyspirit.config.Config;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.WeatherEffectRenderer;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.Heightmap;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+
+@Mixin(WeatherEffectRenderer.class)
+public class WeatherEffectRendererMixin {
+    @ModifyReturnValue(
+            method = "getPrecipitationAt",
+            at = @At("RETURN")
+    )
+    private Biome.Precipitation getPrecipitationAt(Biome.Precipitation original) {
+        return Config.INSTANCE.getAlwaysSnowing() ? Biome.Precipitation.SNOW : original;
+    }
+
+    @WrapOperation(
+            method = "tickRainParticles",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;getRainLevel(F)F")
+    )
+    private float tickRainParticlesRainLevel(ClientLevel instance, float v, Operation<Float> original) {
+        return Config.INSTANCE.getAlwaysSnowing() ? 1.0f : original.call(instance, v);
+    }
+
+    @WrapOperation(
+            method = "render(Lnet/minecraft/world/level/Level;Lnet/minecraft/client/renderer/MultiBufferSource;IFLnet/minecraft/world/phys/Vec3;)V",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;getRainLevel(F)F")
+    )
+    private float extractRenderStateRainLevel(Level instance, float f, Operation<Float> original) {
+        return Config.INSTANCE.getAlwaysSnowing() ? 1.0f : original.call(instance, f);
+    }
+
+    @WrapOperation(
+            method = "collectColumnInstances",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;getHeight(Lnet/minecraft/world/level/levelgen/Heightmap$Types;II)I")
+    )
+    private int extractRenderStateGetHeight(Level instance, Heightmap.Types types, int i, int j, Operation<Integer> original) {
+        return Config.INSTANCE.getNoSnowBlocking() ? instance.getMinY() : original.call(instance, types, i, j);
+    }
+}
