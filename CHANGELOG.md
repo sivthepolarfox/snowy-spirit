@@ -1,2 +1,2 @@
 ## %version%
-- Adds support for Minecraft 26.2
+- Fixes a dependency not being included, causing crashes on launch
